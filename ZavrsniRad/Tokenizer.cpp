@@ -1,8 +1,5 @@
 #include "Tokenizer.h"
-#include <string>
-#include <algorithm>
-#include <iterator>
-#include <vector>
+
 
 namespace vsite {
 

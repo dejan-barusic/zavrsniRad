@@ -5,6 +5,8 @@
 #pragma once
 namespace vsite {
 
+	using namespace std;
+
 	class Country
 	{
 	public:

@@ -1,21 +1,34 @@
-// ZavrsniRad.cpp : Defines the entry point for the console application.
-//
-
 #include "stdafx.h"
 
 
 int main()
 {
-	std::list<vsite::Country> countries;
-	std::ifstream file("zavrsnidb.csv");
-	std::string row;
+	using namespace std;
 
-	std::getline(file, row);
-	std::getline(file, row);
+	list<vsite::Country> countries;
+	ifstream file("zavrsnidb.csv");
+	string row;
+	vector<string> keys, values;
+
+	if (file.good()) {
+		getline(file, row);
+		keys = vsite::Tokenizer::tokenize(row, ';');
+	}
+
+	getline(file, row);
 
 	while (file.good())	{
 		std::getline(file, row);
-		countries.push_back(vsite::Country(row));
+		values = vsite::Tokenizer::tokenize(row, ';');
+		try {
+			if(keys.size() == values.size())
+				countries.push_back(vsite::Country(keys, values));
+			else
+				throw invalid_argument("wrong number of data fields for country " + values[0]);
+		}
+		catch (const invalid_argument& ia) {
+			cout << "Error while creating country data: " << ia.what() << endl;
+		}
 	}
 
     return 0;

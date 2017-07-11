@@ -4,11 +4,12 @@
 #pragma once
 namespace vsite {
 
+	using namespace std;
+
 	class Tokenizer
 	{
-	using namespace std;
 	public:
-		vector<string> tokenize(const )
+		static vector<string> tokenize(const string input, char delimiter);
 	private:
 		Tokenizer();
 		~Tokenizer();
