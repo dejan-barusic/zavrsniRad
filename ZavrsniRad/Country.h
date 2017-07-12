@@ -1,6 +1,8 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <algorithm>
+#include <iterator>
 
 #pragma once
 namespace vsite {
@@ -12,6 +14,7 @@ namespace vsite {
 	public:
 		Country(vector<string>, vector<string>);
 		~Country();
+		void operator=(Country other);
 
 		std::string name;
 		std::map<std::string, double> data;

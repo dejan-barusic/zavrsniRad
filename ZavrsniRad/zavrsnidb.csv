@@ -1,5 +1,4 @@
 Country;Area(sq km);Population;Life expectancy at birth(years);Birth rate(births/1000 population);Death rate(deaths/1000 population);Unemployment rate(%);Internet users;Current account balance;GDP;GDP - per capita;Debt - external;Public debt(% of GDP);Electricity - consumption(kWh);Electricity - production(kWh)
-String;double;double;double;double;double;double;double;double;double;double;double;double;double;double
 Afghanistan;647500;29928987;42.90;47.02;20.75;NAN;1000;NAN;21500000000;800;8000000000;NAN;652200000;540000000
 Albania;28748;3563112;77.24;42962;43074;14.80;30000;-504000000;17460000000;4900;1410000000;NAN;6760000000;5680000000
 Algeria;2381740;32531853;73.00;17.13;22007;25.40;500000;11900000000;2,12E+11;6600;21900000000;37.40;23610000000;25760000000
