@@ -20,4 +20,6 @@
 #include <string>
 #include <fstream>
 #include <list>
+#include <array>
 #include <algorithm>
+#include <numeric>
