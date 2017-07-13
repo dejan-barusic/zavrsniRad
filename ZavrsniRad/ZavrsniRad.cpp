@@ -1,16 +1,5 @@
 #include "stdafx.h"
 
-std::list<vsite::Country> selectCountriesByPartialName(std::list<vsite::Country>, std::string);
-std::list<vsite::Country> selectCountriesByData(std::list<vsite::Country>, std::string, double);
-std::list<vsite::Country> selectCountriesByData(std::list<vsite::Country>, std::string, double, double);
-vsite::Country findSingleCountryWithMinValue(std::list<vsite::Country>, std::string);
-std::string getValidKey(std::vector<std::string>, std::string);
-std::list<vsite::Country> sortCountriesByData(std::list<vsite::Country>, std::string);
-bool checkSorting(std::list<vsite::Country>, std::string);
-std::list<vsite::Country> reverseOrder(std::list<vsite::Country>);
-double calculateAvarageByKey(std::list<vsite::Country>, std::string);
-
-
 
 int main()
 {
@@ -50,6 +39,12 @@ int main()
 	double avg = calculateAvarageByKey(selectedCountries, getValidKey(keys, "life"));
 	vsite::Country c = findSingleCountryWithMinValue(allCountries, getValidKey(keys, "life"));
 	string s = getValidKey(keys, "elect");
+
+	//displayCountriesNames(selectedCountries);
+	
+	vector<string> selectedKeys;
+	selectedKeys.push_back(getValidKey(keys, "life"));
+	displayCountriesData(selectedCountries, selectedKeys);
 
     return 0;
 }
@@ -145,4 +140,27 @@ double calculateAvarageByKey(std::list<vsite::Country> countries, std::string va
 		[&validKey](double left, vsite::Country right) {
 			return left + right.data[validKey];
 		}) / countries.size();
+}
+
+void displayCountriesNames(std::list<vsite::Country> countries) {
+	using namespace std;
+	for_each(countries.cbegin(), countries.cend(), 
+		[](vsite::Country country) {
+			cout << country.name << "  ";
+		});
+	cout << endl;
+}
+
+void displayCountriesData(std::list<vsite::Country> countries, std::vector<std::string> validKeys) {
+	using namespace std;
+	for_each(countries.cbegin(), countries.cend(),
+		[&validKeys](vsite::Country country) {
+			cout << country.name << "\t\t";	
+			for (auto i = country.data.cbegin(); i != country.data.cend(); ++i) {
+				if (find(validKeys.cbegin(), validKeys.cend(), i->first) != validKeys.cend())
+					cout << i->second;
+			}
+			cout << endl;
+	});
+	
 }
