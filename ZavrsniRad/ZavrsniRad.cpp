@@ -13,6 +13,7 @@ int main()
 	if (file.good()) {
 		getline(file, rowKeys);
 		keys = vsite::Tokenizer::tokenize(rowKeys, ';');
+		keys.at(0) = "";
 	}
 
 	while (file.good())	{
@@ -31,26 +32,151 @@ int main()
 		}
 	}
 
-	selectedCountries = selectCountriesByData(allCountries, getValidKey(keys, "life"), 50, 55);
-	bool isSortedBefore = checkSorting(selectedCountries, getValidKey(keys, "life"));
-	selectedCountries = sortCountriesByData(selectedCountries, getValidKey(keys, "life"));
-	bool isSortedAfter = checkSorting(selectedCountries, getValidKey(keys, "life"));
-	list<vsite::Country> reversedCountries = reverseOrder(selectedCountries);
-	double avg = calculateAvarageByKey(selectedCountries, getValidKey(keys, "life"));
-	vsite::Country c = findSingleCountryWithMinValue(allCountries, getValidKey(keys, "life"));
-	string s = getValidKey(keys, "elect");
+	displayMenu();
 
-	//displayCountriesNames(selectedCountries);
-	
-	vector<string> selectedKeys;
-	selectedKeys.push_back(getValidKey(keys, "life"));
-	displayCountriesData(selectedCountries, selectedKeys);
+	while (true) {
+		cout << "Please select command: ";
+		string input;
+		getline(cin, input);
+		char action;
+		if (input.length() == 0)
+			action = 'x';
+		else
+			action = input.at(0);
+		if (action == 'e')
+			break;
+
+		switch (action)
+		{
+		// Select countries by name
+		case '1':
+		{
+			cout << "Enter part of country's name: ";
+			string input;
+			getline(cin, input);
+			selectedCountries = (selectCountriesByPartialName(allCountries, input));
+			displayCountriesNames(selectedCountries);
+			break;
+		}
+		// Select countries by data column
+		case '2':
+		{
+			cout << "Enter column name: ";
+			string validKey = readColumnName(keys);
+			cout << "Enter minimum value: ";
+			double min = readDouble();
+			cout << "Enter maximum value: ";
+			double max = readDouble();
+			selectedCountries = selectCountriesByData(allCountries, validKey, min, max);
+			selectedCountries = sortCountriesByData(selectedCountries, validKey);
+			displayCountriesData(selectedCountries, validKey);
+			break;
+		}
+		// Sort selected countries by data column
+		case '3':
+		{
+			cout << "Enter column name: ";
+			string validKey = readColumnName(keys);
+			selectedCountries = sortCountriesByData(selectedCountries, validKey);
+			displayCountriesData(selectedCountries, validKey);
+			break;
+		}
+		// Calculate avarage value of data column for selected countries
+		case '4':
+		{
+			cout << "Enter column name: ";
+			string validKey = readColumnName(keys);
+			double avarage = calculateAvarageByKey(selectedCountries, validKey);
+			displayCountriesData(selectedCountries, validKey);
+			cout << "Avarage value for column \"" << validKey << "\" is " << avarage << endl << endl;
+			break;
+		}
+		// Find selected country with minimal column value
+		case '5':
+		{
+			cout << "Enter column name: ";
+			string validKey = readColumnName(keys);
+			list<vsite::Country> country; 
+			country.push_back(findSingleCountryWithMinValue(allCountries, validKey));
+			displayCountriesData(country, validKey);
+			break;
+		}
+		// Show selected countries
+		case '6':
+			displayCountriesNames(selectedCountries);
+			break;
+		// Show selected countries with data columns
+		case '7':
+		{
+			cout << "Enter column names separated by space: ";
+			string input, userKey;
+			vector<string> userKeys;
+			getline(cin, input);
+			istringstream iss(input);
+			while (iss >> userKey) {
+				string validKey = getValidKey(keys, userKey);
+				if (validKey.length() > 0)
+					userKeys.push_back(validKey);
+				else
+					cout << "Column \"" << userKey << "\" doesn't exist." << endl;
+			}
+			displayCountriesData(selectedCountries, userKeys);
+			break;
+		}
+		// Reverse sorting
+		case '8':
+			selectedCountries = reverseOrder(selectedCountries);
+			displayCountriesNames(selectedCountries);
+			break;
+		// Select all countries
+		case 'a':
+			selectedCountries.erase(selectedCountries.begin(), selectedCountries.end());
+			copy(allCountries.begin(), allCountries.end(), std::back_inserter(selectedCountries));
+			break;
+		// Clear screen
+		case 'c':
+			system("cls");
+			displayMenu();
+			break;
+		default:
+			cout << "Unknown command. Please try again." << endl;
+			break;
+		}
+	}
 
     return 0;
 }
 
 
+double readDouble() {
+	using namespace std;
+	double value;
+	cin >> value;
+	while (cin.fail()) {
+		cin.clear();
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		cout << "Unable to interpret input. Please enter a number: ";
+		cin >> value;
+	}
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	return value;
+}
 
+std::string readColumnName(std::vector<std::string> keys) {
+	using namespace std;
+	string userKey;
+	cin >> userKey;
+	string validKey = getValidKey(keys, userKey);
+	while (validKey.empty()) {
+		cin.clear();
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		cout << "Unable to find column. Please enter column name: ";
+		cin >> userKey;
+		validKey = getValidKey(keys, userKey);
+	}
+	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	return validKey;
+}
 
 std::list<vsite::Country> selectCountriesByPartialName(std::list<vsite::Country> countries, std::string name) {
 	std::transform(name.begin(), name.end(), name.begin(), ::tolower);
@@ -73,7 +199,7 @@ std::list<vsite::Country> selectCountriesByData(std::list<vsite::Country> countr
 		[&validKey, minValue, maxValue](vsite::Country country) {
 			bool flag = true;		
 			for (auto i = country.data.begin(); i != country.data.end(); ++i) {
-				if (i->first == validKey && i->second >= minValue && i->second <= maxValue) {
+				if (country.name.empty() || i->first == validKey && i->second >= minValue && i->second <= maxValue) {
 					flag = false;
 					break;
 				}
@@ -99,7 +225,7 @@ std::string getValidKey(std::vector<std::string> validKeys, std::string partialK
 			std::transform(validKey.begin(), validKey.end(), validKey.begin(), ::tolower);
 			return validKey.find(partialKey) != std::string::npos;
 		});
-	return *result;
+	return result != validKeys.end() ? *result : "";
 }
 
 /*
@@ -144,23 +270,79 @@ double calculateAvarageByKey(std::list<vsite::Country> countries, std::string va
 
 void displayCountriesNames(std::list<vsite::Country> countries) {
 	using namespace std;
+	if (countries.empty()) {
+		cout << endl << "No countries to display." << endl << endl;
+		return;
+	}
+	cout << endl;
 	for_each(countries.cbegin(), countries.cend(), 
 		[](vsite::Country country) {
-			cout << country.name << "  ";
+			cout << "[" << country.name << "] ";
 		});
-	cout << endl;
+	cout << endl << endl;
+}
+
+void displayCountriesData(std::list<vsite::Country> countries, std::string validKey) {
+	std::vector<std::string> validKeys;
+	validKeys.push_back(validKey);
+	displayCountriesData(countries, validKeys);
 }
 
 void displayCountriesData(std::list<vsite::Country> countries, std::vector<std::string> validKeys) {
 	using namespace std;
+	if (validKeys.empty()) {
+		cout << endl << "No columns to display." << endl << endl;
+		return;
+	}
+	const int columnWidthCharsData = 20;
+	const int columnWidthCharsName = 25;
+
+	string namePlaceholder(columnWidthCharsName + 1, ' ');
+
+	cout << endl << namePlaceholder;
+
+	for (auto i = validKeys.cbegin(); i != validKeys.cend(); ++i) {
+		string resized(*i);
+		resized.resize(columnWidthCharsData, ' ');
+		cout << resized << ' ';
+	}
+	cout << endl;
+
 	for_each(countries.cbegin(), countries.cend(),
-		[&validKeys](vsite::Country country) {
-			cout << country.name << "\t\t";	
-			for (auto i = country.data.cbegin(); i != country.data.cend(); ++i) {
-				if (find(validKeys.cbegin(), validKeys.cend(), i->first) != validKeys.cend())
-					cout << i->second;
+		[&validKeys, &columnWidthCharsData, &columnWidthCharsName](vsite::Country country) {
+			string name(country.name);
+			name.resize(columnWidthCharsName, ' ');
+			cout << name << ' ';
+
+			for (auto i = validKeys.cbegin(); i != validKeys.cend(); ++i) {
+				for (auto j = country.data.cbegin(); j != country.data.cend(); ++j) {
+					if (*i == j->first) {
+						std::cout << std::resetiosflags(std::ios::adjustfield);
+						std::cout << std::setiosflags(std::ios::left);
+						std::cout.width(columnWidthCharsData);
+						cout << j->second << ' ';
+						break;
+					}
+				}
 			}
 			cout << endl;
 	});
-	
+	cout << endl;
+}
+
+void displayMenu() {
+	using namespace std;
+	cout << endl;
+	cout << "\t[1] Select countries by name" << endl;
+	cout << "\t[2] Select countries by data column" << endl;
+	cout << "\t[3] Sort selected countries by data column" << endl;
+	cout << "\t[4] Calculate avarage value of data column for selected countries" << endl;
+	cout << "\t[5] Find selected country with minimal column value" << endl;
+	cout << "\t[6] Show selected countries" << endl;
+	cout << "\t[7] Show selected countries with data columns" << endl;
+	cout << "\t[8] Reverse sorting" << endl;
+	cout << "\t[a] Select all countries" << endl;
+	cout << "\t[c] Clear screen" << endl;
+	cout << "\t[e] Exit" << endl;
+	cout << endl << endl;
 }
