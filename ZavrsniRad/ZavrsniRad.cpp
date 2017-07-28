@@ -1,20 +1,72 @@
 #include "stdafx.h"
 
 
+void loadCSV(const std::string &path, std::vector<std::string> &keys, std::vector<vsite::Country2> &countries)
+{
+	std::ifstream file(path);
+	std::locale L(std::locale::classic(), new csvCtype);
+	file.imbue(L);
+
+	if (file.good()) {
+		std::string line;
+		std::getline(file, line);
+		std::istringstream iss(line);
+		iss.imbue(L);
+		std::copy(std::istream_iterator<std::string>(iss), std::istream_iterator<std::string>(), std::back_inserter(keys));
+	}
+	while (file.good()) {
+		std::string line, name;
+		std::vector<vsite::Field> values;
+		std::getline(file, line);
+		std::istringstream iss(line);
+		iss.imbue(L);
+		iss >> name;
+		std::copy(std::istream_iterator<vsite::Field>(iss), std::istream_iterator<vsite::Field>(), std::back_inserter(values));
+		auto c = vsite::Country2(name, keys, values);
+		countries.push_back(c);
+	}
+}
+
 int main()
 {
 	using namespace std;
 
+	vector<string> keys;
+	vector<vsite::Country2> countries;
+
+	loadCSV("zavrsnidb.csv", keys, countries);
+
+	vsite::DataProcessor dp(keys, countries);
+	vector<string> sk{ "life", "", "grah", "area"};
+	dp.out("br", sk);
+
+	return 0;
+
+
+
+
+
+
+
+
+
+
+
 	list<vsite::Country> allCountries, selectedCountries;
+
 	ifstream file("zavrsnidb.csv");
 	string rowKeys;
-	vector<string> keys;
 
 	if (file.good()) {
 		getline(file, rowKeys);
 		keys = vsite::Tokenizer::tokenize(rowKeys, ';');
 		keys.at(0) = "";
 	}
+
+
+
+
+	
 
 	while (file.good())	{
 		vector<string> values;
@@ -31,6 +83,7 @@ int main()
 			cout << "Error while creating country data: " << ia.what() << endl;
 		}
 	}
+
 
 	displayMenu();
 

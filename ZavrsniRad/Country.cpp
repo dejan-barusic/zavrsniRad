@@ -3,7 +3,7 @@
 
 namespace vsite {
 
-	Country::Country(vector<string> keys, vector<string> values)
+	Country::Country(const vector<string> &keys, vector<string> values)
 	{
 		
 		name = values[0];
@@ -18,15 +18,17 @@ namespace vsite {
 		}
 	}
 
-	Country::~Country()
+
+	Country2::Country2(const std::string name, std::vector<std::string> &keys, const std::vector<vsite::Field> values) : name(name), keys(keys), values(values)
 	{
 	}
 
-	void Country::operator=(Country other)
+	void Country2::operator=(const Country2 &other)
 	{
 		name = other.name;
-		for (auto i = other.data.cbegin(); i != other.data.cend(); ++i) {
-			data[i->first] = i->second;
-		}
+		keys = other.keys;
+		values = other.values;
 	}
+
+
 }

@@ -3,6 +3,10 @@
 #include <vector>
 #include <algorithm>
 #include <iterator>
+#include <fstream>
+#include <sstream>
+#include "csvCtype.h"
+#include "Field.h"
 
 #pragma once
 namespace vsite {
@@ -12,11 +16,20 @@ namespace vsite {
 	class Country
 	{
 	public:
-		Country(vector<string>, vector<string>);
-		~Country();
-		void operator=(Country other);
+		Country(const vector<string> &keys, vector<string> values);
 
 		std::string name;
 		std::map<std::string, double> data;
+	};
+
+	class Country2
+	{
+	public:
+		Country2(const std::string name, std::vector<std::string> &keys, const std::vector<vsite::Field> values);
+		void operator=(const Country2 &other);
+		
+		std::string name;
+		std::vector<std::string> &keys;
+		std::vector<vsite::Field> values;
 	};
 }
