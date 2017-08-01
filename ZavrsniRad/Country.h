@@ -7,26 +7,16 @@
 #include <sstream>
 #include "csvCtype.h"
 #include "Field.h"
+#include <vector>
 
 #pragma once
 namespace vsite {
 
-	using namespace std;
-
 	class Country
 	{
 	public:
-		Country(const vector<string> &keys, vector<string> values);
-
-		std::string name;
-		std::map<std::string, double> data;
-	};
-
-	class Country2
-	{
-	public:
-		Country2(const std::string name, std::vector<std::string> &keys, const std::vector<vsite::Field> values);
-		void operator=(const Country2 &other);
+		Country(const std::string name, std::vector<std::string> &keys, const std::vector<vsite::Field> values);
+		void operator=(const Country &other);
 		
 		std::string name;
 		std::vector<std::string> &keys;
