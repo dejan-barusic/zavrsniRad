@@ -11,25 +11,26 @@ namespace vsite {
 	Field::Field(const Field &other) : value(other.value), undefined(other.undefined) {
 	}
 
-	Field Field::operator+(const Field &other) const {
-		if (undefined && other.undefined)
+	Field& Field::operator+(const Field &other) {
+		if (undefined & other.undefined)
 			return Field();
-		else if (undefined)
+		if (undefined & !other.undefined)
 			return Field(other);
-		else if (other.undefined)
-			return *this;
-		else return Field(value + other.value);
+		if (!undefined & other.undefined)
+			return Field(*this);
+		value += other.value;
+		return *this;
 	}
 
-	bool Field::operator==(const Field &other) const {
-		return value == other.value && undefined == other.undefined;
+	bool Field::operator==(const Field &other) {
+		return value == other.value & undefined == other.undefined;
 	}
 
-	bool Field::operator!=(const Field &other) const {
+	bool Field::operator!=(const Field &other) {
 		return !(*this == other);
 	}
 
-	bool Field::operator<(const Field &other) const {
+	bool Field::operator<(const Field &other) {
 		if (undefined & other.undefined)
 			return false;
 		if (undefined & !other.undefined)
@@ -44,6 +45,10 @@ namespace vsite {
 			return std::numeric_limits<double>::quiet_NaN();
 		return
 			value;
+	}
+
+	bool Field::isUndefined() {
+		return undefined;
 	}
 
 	std::ostream& operator<<(std::ostream &os, const vsite::Field &field) {

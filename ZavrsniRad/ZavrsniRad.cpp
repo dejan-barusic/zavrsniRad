@@ -1,12 +1,10 @@
 #include "stdafx.h"
 
 
-void loadCSV(const std::string &path, std::vector<std::string> &keys, std::vector<vsite::Country> &countries)
-{
+void loadCSV(const std::string &path, std::vector<std::string> &keys, std::vector<vsite::Country> &countries) {
 	std::ifstream file(path);
 	std::locale L(std::locale::classic(), new csvCtype);
 	file.imbue(L);
-
 	if (file.good()) {
 		std::string line;
 		std::getline(file, line);
@@ -82,20 +80,18 @@ void displayMenu() {
 	cout << "\t[3] Sort selection alphabetically" << endl;
 	cout << "\t[4] Sort selection by column name" << endl;
 	cout << "\t[5] Display selection" << endl;
+	cout << "\t[6] Calculate avarage value of column" << endl;
 	cout << "\t[k] Display all column names" << endl;
 	cout << "\t[r] Clear selection" << endl;
 	cout << "\t[c] Clear screen" << endl;
 	cout << "\t[e] Exit" << endl;
-	cout << endl << endl;
+	cout << endl;
 }
 
-int main()
-{
+int main() {
 	using namespace std;
-
 	vector<string> keys;
 	vector<vsite::Country> countries;
-
 	loadCSV("zavrsnidb.csv", keys, countries);
 	vsite::DataProcessor dp(keys, countries);
 	displayMenu();
@@ -107,8 +103,10 @@ int main()
 			{
 				cout << "Enter country name > ";
 				string name = inputString();
+				cout << endl;
 				dp.selectByName(name);
 				dp.outSelection();
+				cout << endl;
 				break;
 			}
 			case '2':  // Select countries by column values
@@ -119,25 +117,46 @@ int main()
 				double min = inputDouble();
 				cout << "Enter max value > ";
 				double max = inputDouble();
+				cout << endl;
 				dp.selectByColumnValue(column, min, max);
 				dp.outSelection(column);
+				cout << endl;
 				break;
 			}
 			case '3':  // Sort selection alphabetically
+				cout << endl;
 				dp.sortAlphabetically();
+				dp.outSelection();
+				cout << endl;
 				break;
 			case '4':  // Sort selection by column name
 			{
 				cout << "Enter column name > ";
 				string column = inputString();
+				cout << endl;
 				dp.sortByColumnName(column);
+				dp.outSelection(column);
+				cout << endl;
 				break;
 			}
 			case '5':  // Display selection
 			{
 				cout << "Enter column names separated by comma > ";
 				vector<string> columns = inputStrings();
+				cout << endl;
 				dp.outSelection(columns);
+				cout << endl;
+				break;
+			}
+			case '6':  // Calculate avarage value of column
+			{
+				cout << "Enter column name > ";
+				string column = inputString();
+				cout << endl;
+				double avg = dp.avarage(column);
+				if(!isnan(avg))
+					cout << "Avarage value for selection is " << avg << endl;
+				cout << endl;
 				break;
 			}
 			case 'k':  // Display all column names
@@ -159,10 +178,5 @@ int main()
 				break;
 			}
 	};
-
 	return 0;
 }
-
-
-
-

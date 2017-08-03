@@ -2,15 +2,17 @@
 
 namespace vsite {
 
-	DataProcessor::DataProcessor(const std::vector<std::string> &keys, std::vector<vsite::Country> &countries) : keys(keys), countries(countries), output(std::cout), selectionFirst(countries.begin()), selectionLast(countries.end()) {
+	// PUBLIC MEMBERS
+
+	DataProcessor::DataProcessor(const std::vector<std::string> &columns, std::vector<vsite::Country> &countries) : keys(columns), countries(countries), output(std::cout), selectionFirst(countries.begin()), selectionLast(countries.end()) {
 	}
 
-	DataProcessor::DataProcessor(const std::vector<std::string> &keys, std::vector<vsite::Country> &countries, std::ostream &os) : keys(keys), countries(countries), output(os), selectionFirst(countries.begin()), selectionLast(countries.end()) {
+	DataProcessor::DataProcessor(const std::vector<std::string> &columns, std::vector<vsite::Country> &countries, std::ostream &os) : keys(columns), countries(countries), output(os), selectionFirst(countries.begin()), selectionLast(countries.end()) {
 	}
 
 	void DataProcessor::selectByName(const std::string &name) {
 		if (name.empty()) {
-			output << endl << "No data to display." << endl << endl;
+			output << "No data to display." << endl;
 			return;
 		}
 		byName(name, selectionFirst, selectionLast);
@@ -18,7 +20,7 @@ namespace vsite {
 			sortByName(selectionFirst, selectionLast);
 		}
 		else {
-			output << endl << "No countries match selection." << endl << endl;
+			output << "No countries match selection." << endl;
 		}
 	}
 
@@ -28,7 +30,7 @@ namespace vsite {
 			index = getIndex(column);
 		}
 		catch (const std::invalid_argument &e) {
-			output << std::endl << e.what() << std::endl << std::endl;
+			output << e.what() << endl;
 			return;
 		}
 		byColumn(index, min, max, selectionFirst, selectionLast);
@@ -36,7 +38,7 @@ namespace vsite {
 			sortByColumn(index, selectionFirst, selectionLast);
 		}
 		else {
-			output << endl << "No countries match selection." << endl << endl;
+			output << "No countries match selection." << endl;
 		}
 	}
 
@@ -51,7 +53,7 @@ namespace vsite {
 			index = getIndex(column);
 		}
 		catch (const std::invalid_argument &e) {
-			output << std::endl << e.what() << std::endl << std::endl;
+			output << e.what() << endl;
 			return;
 		}
 		toOutput(index, selectionFirst, selectionLast);
@@ -82,10 +84,38 @@ namespace vsite {
 		sortByColumn(index, selectionFirst, selectionLast);
 	}
 
+	double DataProcessor::avarage(const std::string &column) {
+		int index;
+		try {
+			index = getIndex(column);
+		}
+		catch (const std::invalid_argument &e) {
+			output << e.what() << endl;
+			return numeric_limits<double>::quiet_NaN();
+		}
+		int countriesWithValues = 0;
+		countriesWithValues = count_if(selectionFirst, selectionLast,
+			[index](vsite::Country country) {
+			return !country.values.at(index).isUndefined();
+			});
+		if (countriesWithValues == 0) {
+			output << "Selection contains no values." << endl;
+			return numeric_limits<double>::quiet_NaN();
+		}
+		vsite::Field sum = std::accumulate(selectionFirst, selectionLast, vsite::Field(0.0),
+			[index](vsite::Field left, vsite::Country right) {
+				return left + right.values.at(index);
+			});
+		return sum / countriesWithValues;
+	}
+
 	void DataProcessor::clear() {
 		selectionFirst = countries.begin();
 		selectionLast = countries.end();
 	}
+
+
+	// PRIVATE MEMBERS
 
 	// Partitions elements in range first to last by country name and sets iterator last to partition point 
 	void DataProcessor::byName(const std::string &name, std::vector<vsite::Country>::iterator &first, std::vector<vsite::Country>::iterator &last) {
@@ -137,7 +167,7 @@ namespace vsite {
 		{
 			string resized(keys.at(0));
 			resized.resize(WIDTH, ' ');
-			output << endl << resized << ' ';
+			output << resized << ' ';
 		}
 		// Outputs names of selected columns
 		for (unsigned i = 0; i < indexes.size(); ++i) {
@@ -159,7 +189,6 @@ namespace vsite {
 			}
 			output << endl;
 		}
-		output << endl;
 	}
 
 	// Returns valid key for partial key argument
@@ -232,11 +261,4 @@ namespace vsite {
 //std::list<vsite::Country> reverseOrder(std::list<vsite::Country> countries) {
 //	std::reverse(countries.begin(), countries.end());
 //	return countries;
-//}
-//
-//double calculateAvarageByKey(std::list<vsite::Country> countries, std::string validKey) {
-//	return std::accumulate(countries.cbegin(), countries.cend(), 0.0,
-//		[&validKey](double left, vsite::Country right) {
-//		return left + right.data[validKey];
-//	}) / countries.size();
 //}

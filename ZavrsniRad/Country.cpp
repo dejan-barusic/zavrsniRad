@@ -10,5 +10,4 @@ namespace vsite {
 		keys = other.keys;
 		values = other.values;
 	}
-
 }

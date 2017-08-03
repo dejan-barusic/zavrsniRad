@@ -1,20 +1,14 @@
 #pragma once
 
 #include "targetver.h"
-#include "DataProcessor.h"
-#include "Country.h"
 
-#include <stdio.h>
-#include <tchar.h>
-#include <stdlib.h>
-#include "Field.h"
-#include <iostream>
-#include <sstream>
 #include <fstream>
-#include <iomanip>
-#include <ios>
+#include <iostream>
+#include <iterator>
+#include <sstream>
 #include <string>
-#include <list>
-#include <array>
-#include <algorithm>
-#include <numeric>
+#include <cmath>
+
+#include "csvCtype.h"
+#include "Country.h"
+#include "DataProcessor.h"

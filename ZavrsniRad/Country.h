@@ -1,15 +1,8 @@
-#include <string>
-#include <map>
-#include <vector>
-#include <algorithm>
-#include <iterator>
-#include <fstream>
-#include <sstream>
-#include "csvCtype.h"
-#include "Field.h"
-#include <vector>
-
 #pragma once
+#include <string>
+#include <vector>
+#include "Field.h"
+
 namespace vsite {
 
 	class Country

@@ -1,23 +1,21 @@
-#include <vector>
-#include <ostream>
-#include <iomanip>
-#include "Country.h"
+#pragma once
 #include <algorithm>
-#include <numeric>
-#include <stdlib.h>
+#include <vector>
 #include <iomanip>
-#include <ios>
+#include <numeric>
+#include <ostream>
 #include <string>
+#include <stdlib.h>
+#include "Country.h"
 
 namespace vsite {
 
 	using namespace std;
 
-#pragma once
 	class DataProcessor {
 	public:
-		DataProcessor(const std::vector<std::string> &keys, std::vector<vsite::Country> &countries);
-		DataProcessor(const std::vector<std::string> &keys, std::vector<vsite::Country> &countries, std::ostream &os);
+		DataProcessor(const std::vector<std::string> &columns, std::vector<vsite::Country> &countries);
+		DataProcessor(const std::vector<std::string> &columns, std::vector<vsite::Country> &countries, std::ostream &os);
 		void selectByName(const std::string &name);
 		void selectByColumnValue(const std::string &column, const double &min, const double &max);
 		void outSelection();
@@ -26,6 +24,7 @@ namespace vsite {
 		void outColumnNames();
 		void sortAlphabetically();
 		void sortByColumnName(const std::string &column);
+		double avarage(const std::string &column);
 		void clear();
 
 	private:
