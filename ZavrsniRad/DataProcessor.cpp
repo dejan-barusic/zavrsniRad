@@ -61,6 +61,11 @@ namespace vsite {
 		toOutput(getIndexes(columns), selectionFirst, selectionLast);
 	}
 
+	void DataProcessor::outColumnNames() {
+		for (auto i = keys.cbegin(); i != keys.cend(); ++i)
+			output << *i << std::endl;
+	}
+
 	void DataProcessor::sortAlphabetically() {
 		sortByName(selectionFirst, selectionLast);
 	}

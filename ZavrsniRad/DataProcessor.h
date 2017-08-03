@@ -23,6 +23,7 @@ namespace vsite {
 		void outSelection();
 		void outSelection(const std::string &column);
 		void outSelection(const std::vector<std::string> &columns);
+		void outColumnNames();
 		void sortAlphabetically();
 		void sortByColumnName(const std::string &column);
 		void clear();

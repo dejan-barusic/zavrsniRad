@@ -82,6 +82,7 @@ void displayMenu() {
 	cout << "\t[3] Sort selection alphabetically" << endl;
 	cout << "\t[4] Sort selection by column name" << endl;
 	cout << "\t[5] Display selection" << endl;
+	cout << "\t[k] Display all column names" << endl;
 	cout << "\t[r] Clear selection" << endl;
 	cout << "\t[c] Clear screen" << endl;
 	cout << "\t[e] Exit" << endl;
@@ -139,6 +140,11 @@ int main()
 				dp.outSelection(columns);
 				break;
 			}
+			case 'k':  // Display all column names
+				cout << endl;
+				dp.outColumnNames();
+				cout << endl;
+				break;
 			case 'r':  // Clear selection
 				dp.clear();
 				break;
