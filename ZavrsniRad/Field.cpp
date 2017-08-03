@@ -30,7 +30,13 @@ namespace vsite {
 	}
 
 	bool Field::operator<(const Field &other) const {
-		return !undefined & !other.undefined & (value < other.value);
+		if (undefined & other.undefined)
+			return false;
+		if (undefined & !other.undefined)
+			return true;
+		if (!undefined & other.undefined)
+			return false;
+		return value < other.value;
 	}
 
 	Field::operator double() const {
@@ -43,6 +49,8 @@ namespace vsite {
 	std::ostream& operator<<(std::ostream &os, const vsite::Field &field) {
 		if (!field.undefined)
 			os << field.value;
+		else
+			os << "[NO DATA]";
 		return os;
 	}
 

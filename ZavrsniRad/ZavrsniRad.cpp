@@ -134,7 +134,7 @@ int main()
 			}
 			case '5':  // Display selection
 			{
-				cout << "Enter column names separated by comma or empty for all columns > ";
+				cout << "Enter column names separated by comma > ";
 				vector<string> columns = inputStrings();
 				dp.outSelection(columns);
 				break;
