@@ -1,32 +1,13 @@
 #include "Country.h"
 
-
 namespace vsite {
 
-	Country::Country(vector<string> keys, vector<string> values)
-	{
-		
-		name = values[0];
-
-		for (unsigned i = 1; i < keys.size(); ++i) {
-			try {
-				data[keys[i]] = stod(values[i]);
-			}
-			catch (const invalid_argument) {
-				throw invalid_argument(name + "'s data contains invalid numbers");
-			}
-		}
+	Country::Country(const std::string name, std::vector<std::string> &keys, const std::vector<vsite::Field> values) : name(name), keys(keys), values(values) {
 	}
 
-	Country::~Country()
-	{
-	}
-
-	void Country::operator=(Country other)
-	{
+	void Country::operator=(const Country &other) {
 		name = other.name;
-		for (auto i = other.data.cbegin(); i != other.data.cend(); ++i) {
-			data[i->first] = i->second;
-		}
+		keys = other.keys;
+		values = other.values;
 	}
 }

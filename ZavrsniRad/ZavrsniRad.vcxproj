@@ -146,14 +146,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Country.h" />
+    <ClInclude Include="csvCtype.h" />
+    <ClInclude Include="DataProcessor.h" />
+    <ClInclude Include="Field.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Tokenizer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Country.cpp" />
+    <ClCompile Include="csvCtype.cpp" />
+    <ClCompile Include="DataProcessor.cpp" />
+    <ClCompile Include="Field.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Tokenizer.cpp" />
     <ClCompile Include="ZavrsniRad.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

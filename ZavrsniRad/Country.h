@@ -1,22 +1,18 @@
-#include <string>
-#include <map>
-#include <vector>
-#include <algorithm>
-#include <iterator>
-
 #pragma once
-namespace vsite {
+#include <string>
+#include <vector>
+#include "Field.h"
 
-	using namespace std;
+namespace vsite {
 
 	class Country
 	{
 	public:
-		Country(vector<string>, vector<string>);
-		~Country();
-		void operator=(Country other);
-
+		Country(const std::string name, std::vector<std::string> &keys, const std::vector<vsite::Field> values);
+		void operator=(const Country &other);
+		
 		std::string name;
-		std::map<std::string, double> data;
+		std::vector<std::string> &keys;
+		std::vector<vsite::Field> values;
 	};
 }
