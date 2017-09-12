@@ -4,7 +4,6 @@
 void loadCSV(const std::string &path, std::vector<std::string> &keys, std::vector<vsite::Country> &countries) {
 	std::ifstream file(path);
 	std::locale L(std::locale::classic(), new csvCtype);
-	file.imbue(L);
 	if (file.good()) {
 		std::string line;
 		std::getline(file, line);
@@ -20,8 +19,7 @@ void loadCSV(const std::string &path, std::vector<std::string> &keys, std::vecto
 		iss.imbue(L);
 		iss >> name;
 		std::copy(std::istream_iterator<vsite::Field>(iss), std::istream_iterator<vsite::Field>(), std::back_inserter(values));
-		auto c = vsite::Country(name, keys, values);
-		countries.push_back(c);
+		countries.push_back(vsite::Country(name, keys, values));
 	}
 }
 
@@ -80,7 +78,7 @@ void displayMenu() {
 	cout << "\t[3] Sort selection alphabetically" << endl;
 	cout << "\t[4] Sort selection by column name" << endl;
 	cout << "\t[5] Display selection" << endl;
-	cout << "\t[6] Calculate avarage value of column" << endl;
+	cout << "\t[6] Calculate average value of column" << endl;
 	cout << "\t[k] Display all column names" << endl;
 	cout << "\t[r] Clear selection" << endl;
 	cout << "\t[c] Clear screen" << endl;
@@ -148,14 +146,14 @@ int main() {
 				cout << endl;
 				break;
 			}
-			case '6':  // Calculate avarage value of column
+			case '6':  // Calculate average value of column
 			{
 				cout << "Enter column name > ";
 				string column = inputString();
 				cout << endl;
-				double avg = dp.avarage(column);
+				double avg = dp.average(column);
 				if(!isnan(avg))
-					cout << "Avarage value for selection is " << avg << endl;
+					cout << "Average value for selection is " << avg << endl;
 				cout << endl;
 				break;
 			}

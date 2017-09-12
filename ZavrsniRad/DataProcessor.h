@@ -24,7 +24,7 @@ namespace vsite {
 		void outColumnNames();
 		void sortAlphabetically();
 		void sortByColumnName(const std::string &column);
-		double avarage(const std::string &column);
+		double average(const std::string &column);
 		void clear();
 
 	private:

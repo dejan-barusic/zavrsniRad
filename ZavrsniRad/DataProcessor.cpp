@@ -84,7 +84,7 @@ namespace vsite {
 		sortByColumn(index, selectionFirst, selectionLast);
 	}
 
-	double DataProcessor::avarage(const std::string &column) {
+	double DataProcessor::average(const std::string &column) {
 		int index;
 		try {
 			index = getIndex(column);
@@ -95,7 +95,7 @@ namespace vsite {
 		}
 		int countriesWithValues = 0;
 		countriesWithValues = count_if(selectionFirst, selectionLast,
-			[index](vsite::Country country) {
+			[index](const vsite::Country &country) {
 			return !country.values.at(index).isUndefined();
 			});
 		if (countriesWithValues == 0) {
@@ -103,7 +103,7 @@ namespace vsite {
 			return numeric_limits<double>::quiet_NaN();
 		}
 		vsite::Field sum = std::accumulate(selectionFirst, selectionLast, vsite::Field(0.0),
-			[index](vsite::Field left, vsite::Country right) {
+			[index](const vsite::Field &left, const vsite::Country &right) {
 				return left + right.values.at(index);
 			});
 		return sum / countriesWithValues;
@@ -122,7 +122,7 @@ namespace vsite {
 		std::string loweredInputName(name);
 		std::transform(loweredInputName.begin(), loweredInputName.end(), loweredInputName.begin(), ::tolower);
 		last = std::partition(first, last,
-			[&loweredInputName](vsite::Country country) {
+			[&loweredInputName](const vsite::Country &country) {
 			std::string loweredCountryName = country.name;
 			std::transform(loweredCountryName.begin(), loweredCountryName.end(), loweredCountryName.begin(), ::tolower);
 			return loweredCountryName.find(loweredInputName) != std::string::npos;
@@ -132,21 +132,21 @@ namespace vsite {
 	// Partitions elements in range first to last by column name and sets iterator last to partition point 
 	void DataProcessor::byColumn(const int &index, const double &min, const double &max, std::vector<vsite::Country>::iterator &first, std::vector<vsite::Country>::iterator &last) {	
 		last = std::partition(first, last,
-			[&index, &min, &max](vsite::Country country) {
+			[&index, &min, &max](const vsite::Country &country) {
 			return country.values.at(index) >= min && country.values.at(index) <= max;
 		});
 	}
 
 	void DataProcessor::sortByColumn(const int &index, std::vector<vsite::Country>::iterator &first, std::vector<vsite::Country>::iterator &last) {
 		std::sort(first, last,
-			[&index](vsite::Country left, vsite::Country right) {
+			[&index](const vsite::Country &left, const vsite::Country &right) {
 			return left.values.at(index) < right.values.at(index);
 		});
 	}
 
 	void DataProcessor::sortByName(std::vector<vsite::Country>::iterator &first, std::vector<vsite::Country>::iterator &last) {
 		std::sort(first, last,
-			[](vsite::Country left, vsite::Country right) {
+			[](const vsite::Country &left, const vsite::Country &right) {
 			return left.name < right.name;
 		});
 	}
@@ -230,35 +230,9 @@ namespace vsite {
 				validKeys.push_back(validKey);
 		}
 		for (unsigned i = 1; i < keys.size(); ++i) {
-			if (find(validKeys.cbegin(), validKeys.cend(), keys.at(i)) != validKeys.cend())
+			if (std::find(validKeys.cbegin(), validKeys.cend(), keys.at(i)) != validKeys.cend())
 				indexes.push_back(i - 1);
 		}
 		return indexes;
 	}
 }
-
-
-
-
-// TO BE IMPLEMENTED
-
-//vsite::Country findSingleCountryWithMinValue(std::list<vsite::Country> countries, std::string validKey) {
-//	auto result = std::min_element(countries.cbegin(), countries.cend(),
-//		[&validKey](vsite::Country left, vsite::Country right) {
-//		return left.data[validKey] < right.data[validKey];
-//	});
-//	return *result;
-//}
-//
-//
-//bool checkSorting(std::list<vsite::Country> countries, std::string validKey) {
-//	return std::is_sorted(countries.cbegin(), countries.cend(),
-//		[&validKey](vsite::Country left, vsite::Country right) {
-//		return left.data[validKey] < right.data[validKey];
-//	});
-//}
-//
-//std::list<vsite::Country> reverseOrder(std::list<vsite::Country> countries) {
-//	std::reverse(countries.begin(), countries.end());
-//	return countries;
-//}

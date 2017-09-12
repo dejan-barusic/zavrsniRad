@@ -11,19 +11,18 @@ namespace vsite {
 	Field::Field(const Field &other) : value(other.value), undefined(other.undefined) {
 	}
 
-	Field& Field::operator+(const Field &other) {
-		if (undefined & other.undefined)
+	Field Field::operator+(const Field &other) {
+		if (undefined && other.undefined)
 			return Field();
-		if (undefined & !other.undefined)
+		if (undefined && !other.undefined)
 			return Field(other);
-		if (!undefined & other.undefined)
+		if (!undefined && other.undefined)
 			return Field(*this);
-		value += other.value;
-		return *this;
+		return Field(value + other.value);
 	}
 
 	bool Field::operator==(const Field &other) {
-		return value == other.value & undefined == other.undefined;
+		return value == other.value && undefined == other.undefined;
 	}
 
 	bool Field::operator!=(const Field &other) {
@@ -31,11 +30,11 @@ namespace vsite {
 	}
 
 	bool Field::operator<(const Field &other) {
-		if (undefined & other.undefined)
+		if (undefined && other.undefined)
 			return false;
-		if (undefined & !other.undefined)
+		if (undefined && !other.undefined)
 			return true;
-		if (!undefined & other.undefined)
+		if (!undefined && other.undefined)
 			return false;
 		return value < other.value;
 	}
@@ -47,7 +46,7 @@ namespace vsite {
 			value;
 	}
 
-	bool Field::isUndefined() {
+	bool Field::isUndefined() const {
 		return undefined;
 	}
 
@@ -63,9 +62,11 @@ namespace vsite {
 		std::string text;
 		is >> text;
 		try { field.value = std::stod(text); }
-		catch (const std::invalid_argument) {}
+		catch (const std::invalid_argument) {
+			field.undefined = true;
+			return is;
+		}
 		field.undefined = std::isnan(field.value);
 		return is;
 	}
-
 }
