@@ -93,8 +93,7 @@ namespace vsite {
 			output << e.what() << endl;
 			return numeric_limits<double>::quiet_NaN();
 		}
-		int countriesWithValues = 0;
-		countriesWithValues = count_if(selectionFirst, selectionLast,
+		int countriesWithValues = count_if(selectionFirst, selectionLast,
 			[index](const vsite::Country &country) {
 			return !country.values.at(index).isUndefined();
 			});

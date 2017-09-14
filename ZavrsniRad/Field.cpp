@@ -11,14 +11,14 @@ namespace vsite {
 	Field::Field(const Field &other) : value(other.value), undefined(other.undefined) {
 	}
 
-	Field Field::operator+(const Field &other) {
-		if (undefined && other.undefined)
-			return Field();
-		if (undefined && !other.undefined)
-			return Field(other);
-		if (!undefined && other.undefined)
-			return Field(*this);
-		return Field(value + other.value);
+	Field operator+(const Field &left, const Field &right) {
+	if (left.undefined && right.undefined)
+		return Field();
+	if (left.undefined && !right.undefined)
+		return Field(right);
+	if (!left.undefined && right.undefined)
+		return Field(left);
+	return Field(left.value + right.value);
 	}
 
 	bool Field::operator==(const Field &other) {
