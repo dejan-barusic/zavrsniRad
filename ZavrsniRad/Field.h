@@ -10,7 +10,6 @@ namespace vsite {
 		Field();
 		Field(double);
 		Field(const Field&);
-		Field operator+(const Field&);
 		bool operator==(const Field&);
 		bool operator!=(const Field&);
 		bool operator<(const Field&);
@@ -18,6 +17,7 @@ namespace vsite {
 		friend std::ostream& operator<<(std::ostream &os, const Field &field);
 		friend std::istream& operator>>(std::istream &is, Field &field);
 		bool isUndefined() const;
+		friend Field operator+(const Field &left, const Field &right);
 
 	private:
 		double value;
